@@ -2,7 +2,9 @@ import { Button,
          Container, 
          Navbar, 
          Modal } from "react-bootstrap" // Import Bootstrap-styled components
-import { useState } from "react"
+import { useState, useContext } from "react"
+import { CartContext } from "../CartContext"
+import { getProductData } from "../productsStore"
 
 const NavBar = () => {
 
@@ -10,6 +12,9 @@ const NavBar = () => {
     const [ show, setShow ] = useState(false) // determine visibility of modal
     const handleClose = () => setShow(false)  // closes modal
     const handleShow = () => setShow(true)    // opens modal
+
+    // Access full cart
+    const cart = useContext(CartContext)
 
   return (
     <>
@@ -27,7 +32,10 @@ const NavBar = () => {
                 className="justify-content-end" // align content to the right
             >   
                 {/* Button to Show Modal */}
-                <Button onClick={ handleShow }> Cart 0 Items </Button>
+                <Button onClick={ handleShow }> 
+                    Cart { cart.getTotalQuantity() }  Items {/* total quantity of all products */}
+                </Button>
+                
             </Navbar.Collapse>   
 
         </Navbar>
@@ -42,7 +50,35 @@ const NavBar = () => {
             </Modal.Header>
 
             <Modal.Body>
-                <h1>This is the modal body</h1> {/* placeholder text */}
+                
+            { cart.items.length === 0 ? ( // Check for item count
+
+                <h1>Your cart is empty</h1>
+
+                ) : (
+
+                    cart.items.map((item) => {
+                        
+                        // Fetch product data
+                        const product = getProductData(item.id)
+
+                        return (
+
+                            <div key={item.id}>
+                                <h5>{ product.title }</h5>
+                                <p>Quantity: { item.quantity }</p>
+                                {/* Display total price for the product */}
+                                <p>Price: ${(product.price * item.quantity).toFixed(2)}</p>
+                            </div>
+
+                        )
+                        
+                    })
+            )}
+
+            {/* Display Grand Total Price */}
+            <h4>Total: ${cart.getTotalCost().toFixed(2)}</h4> 
+
             </Modal.Body>
 
         </Modal>
