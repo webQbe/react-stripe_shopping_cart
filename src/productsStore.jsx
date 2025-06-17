@@ -18,5 +18,4 @@ const productsArray = [
     },
 ]
 
-
 export { productsArray }
