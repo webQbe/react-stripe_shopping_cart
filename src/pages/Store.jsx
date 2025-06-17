@@ -1,10 +1,8 @@
 /* Homepage */
 import { Row, Col, Card  } from "react-bootstrap" // import Bootstrap’s grid components
+import { productsArray } from "../productsStore"
 
 const Store = () => {
-
-  // Products array
-  const products = [1, 2, 3, 4, 5]
 
   return (
     <>
@@ -15,14 +13,21 @@ const Store = () => {
         md={3}          // On medium and up screens, show 3 columns per row
         className="g-4" // Add Bootstrap gutter spacing (gap: 1.5rem) between columns and rows
       > 
-        { products.map((id) => ( // Map through products array
+        {/* Loop through productsArray and render each product in a Col */}
+        { productsArray.map((product) => (
 
-            <Col key={id}       // <Col>: Represents a grid column inside a row
+            <Col  // <Col>: Represents a grid column inside a row
+                 key={product.id}       
                  align="center" // center content horizontally
             >
 
-              {/* placeholder product card */}
-              <Card>Product {id}</Card> 
+              {/* Show product title and price in the card */}
+              <Card style={{ width: '18rem' }}>
+                <Card.Body>
+                  <Card.Title>{product.title}</Card.Title>
+                  <Card.Text>${product.price.toFixed(2)}</Card.Text>
+                </Card.Body>
+              </Card> 
 
             </Col>
 
