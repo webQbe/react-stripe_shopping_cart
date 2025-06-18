@@ -1,10 +1,9 @@
 import { Button, 
-         Container, 
          Navbar, 
          Modal } from "react-bootstrap" // Import Bootstrap-styled components
 import { useState, useContext } from "react"
 import { CartContext } from "../CartContext"
-import { getProductData } from "../productsStore"
+import CartProduct from "./CartProduct"
 
 const NavBar = () => {
 
@@ -51,36 +50,32 @@ const NavBar = () => {
 
             <Modal.Body>
                 
-            { cart.items.length === 0 ? ( // Check for item count
+            { cart.items.length > 0 ? ( // If there are items in the cart
 
-                <h1>Your cart is empty</h1>
+                <>
+                   { cart.items.map((item) => { // Map over cart.items
 
-                ) : (
-
-                    cart.items.map((item) => {
+                        // Render each CartProduct
+                        return <CartProduct key={item.id} product={item} />
                         
-                        // Fetch product data
-                        const product = getProductData(item.id)
+                    })}
 
-                        return (
+                    {/* Show total cart value */}
+                    <h4>Total: ${cart.getTotalCost().toFixed(2)}</h4> 
 
-                            <div key={item.id}>
-                                <h5>{ product.title }</h5>
-                                <p>Quantity: { item.quantity }</p>
-                                {/* Display total price for the product */}
-                                <p>Price: ${(product.price * item.quantity).toFixed(2)}</p>
-                            </div>
+                    {/* Add "Purchase items!" button */}
+                    <Button variant="success">Purchase items!</Button>
+                </>
 
-                        )
-                        
-                    })
+                ) : ( 
+
+                 <h1>Your cart is empty</h1>
+                 /* Purchase button & total cart value is hidden when cart is empty */    
             )}
 
-            {/* Display Grand Total Price */}
-            <h4>Total: ${cart.getTotalCost().toFixed(2)}</h4> 
+                
 
             </Modal.Body>
-
         </Modal>
     </>
   )
