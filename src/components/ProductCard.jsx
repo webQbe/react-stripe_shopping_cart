@@ -17,16 +17,47 @@ const ProductCard = ({ product }) => {
         <Card.Body>
             <Card.Title>{ product.title }</Card.Title>
             <Card.Text>${product.price.toFixed(2)}</Card.Text> 
-            {/* Quantity Increase button */}
-            <Button 
-              className="m-1 px-2"
-              size="sm"
-              onClick={() => cart.addOneToCart(product.id)} // Add product to cart
-            >+</Button>     
-            {/* Quantity Decrease button */}  
-            <Button className="m-1 px-2" size="sm" onClick={() => cart.removeOneFromCart(product.id)}>-</Button>
-            {/* Product Remove button */}  
-            <Button className="m-1" size="sm" variant="danger" onClick={() => cart.deleteFromCart(product.id)}>Remove</Button>
+
+            { productQuantity > 0 ? 
+                /* show the cart controls */
+                <>
+                  <Form as={Row}>
+
+                      {/* Display how many of this product are currently in the cart */}
+                      <Form.Label column sm="6">
+                        In Cart: { productQuantity } <br />
+                      </Form.Label>
+
+                      {/* Allow increasing/decreasing quantity with + and – */}
+                      <Col sm="6" className="my-2">
+                        <Button  
+                          onClick={() => cart.addOneToCart(product.id)} 
+                          className="mx-2 qty">+</Button>
+                        <Button  
+                          onClick={() => cart.removeOneFromCart(product.id)} 
+                          className="mx-2 qty">-</Button>                        
+                      </Col>
+                  </Form> 
+
+                  {/* Display total cost for the product */}
+                  Total: ${(productQuantity * product.price).toFixed(2)}
+                  <br />
+                  {/* Remove the product from the cart entirely */}
+                  <Button 
+                      variant="danger" 
+                      onClick={() => cart.deleteFromCart(product.id)} 
+                      className="my-2 rm">
+                        Remove
+                  </Button>
+                </>
+                : /* Show Add to Cart button */
+                <Button 
+                  variant="primary" 
+                  onClick={() => cart.addOneToCart(product.id)}
+                >
+                  Add To Cart
+                </Button>
+            }
         </Card.Body>
     </Card>
   )

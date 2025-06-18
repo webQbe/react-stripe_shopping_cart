@@ -1,0 +1,13 @@
+/* Style for Quantity Control button */
+.qty {
+    width: 2rem;
+    padding: 0;
+}
+
+/* Style for Remove button */
+.rm{
+    width: 6rem;
+    height: 2rem;
+    font-size: 1rem;
+    padding: 0;
+}
