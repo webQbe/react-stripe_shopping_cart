@@ -27,7 +27,9 @@ const { getProductData } = require('./productStore');
 
 app.post("/checkout", async (req, res) => {
     console.log("[/checkout] req.body:", req.body);
-    const items = req.body.items; // e.g. [{ id: "...", quantity: N }, ...]
+    
+    const items = req.body.items;
+    const simulateCancel = req.body.simulateCancel;
 
     if (!Array.isArray(items)) {
         return res.status(400).json({ error: "Invalid items array" });
@@ -35,30 +37,36 @@ app.post("/checkout", async (req, res) => {
 
     /* Compute a fake total */
     if (MOCK) { 
-        // Optionally validate and compute total:
-        let total = 0;
-        try {
-            items.forEach(item => {
-                // In mock mode, item.id might be your local product ID.
-                const productData = getProductData(item.id);
-                if (!productData) throw new Error(`Invalid product ID ${item.id}`);
-                total += productData.price * item.quantity;
-            });
-        } catch (err) {
-            console.warn("[MOCK] Invalid items:", err.message);
-            return res.status(400).json({ error: err.message });
-        }
-        console.log(`[MOCK] Checkout requested. Computed total $${total.toFixed(2)}`);
-
         // Return a fake Stripe session URL. Front-end will redirect to this.
         // We can send the client directly to /success (or /cancel) on our React app.
         // For deterministic success flow:
-        const fakeUrl = "http://localhost:3000/success";
-        return res.json({ url: fakeUrl });
+        /* Handle simulateCancel when mocking payments */
+        if (simulateCancel) {
+                console.log(`[MOCK] Checkout cancelled!`);
+                return res.json({ url: "http://localhost:3000/cancel" });
+            }  
+        else {
+                // Optionally validate and compute total:
+                let total = 0;
+                try {
 
+                    items.forEach(item => {
+                        // In mock mode, item.id might be your local product ID.
+                        const productData = getProductData(item.id);
+                        if (!productData) throw new Error(`Invalid product ID ${item.id}`);
+                        total += productData.price * item.quantity;
+                    });
+                } catch (err) {
+                    console.warn("[MOCK] Invalid items:", err.message);
+                    return res.status(400).json({ error: err.message });
+                }
+                    console.log(`[MOCK] Checkout requested. Computed total $${total.toFixed(2)}`);
+                    return res.json({ url: "http://localhost:3000/success" });
+            }  
+        
     }  
 
-    // REAL Stripe mode, if MOCK=false,
+   /*  // REAL Stripe mode, if MOCK=false,
     try {
         // Build line_items array for Stripe: expects price IDs in item.id
         const lineItems = items.map(item => ({
@@ -76,11 +84,11 @@ app.post("/checkout", async (req, res) => {
         return res.json({ url: session.url });
 
     } catch (err) {
-        
+
         console.error("Stripe error:", err);
         return res.status(500).json({ error: "Failed to create Stripe session" });
     }
-
+ */
 });
 
 

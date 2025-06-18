@@ -15,13 +15,16 @@ const NavBar = () => {
     // Access full cart
     const cart = useContext(CartContext)
 
-    const checkout = async () => {
+    const checkout = async (simulateCancel = false) => { // simulateCancel = true for cancel, false for purchase
         await fetch('http://localhost:4000/checkout', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ items: cart.items })
+            body: JSON.stringify({ 
+                    items: cart.items,
+                    simulateCancel: simulateCancel // send flag to mock backend
+                })
         })
         .then(res => res.json())
         .then(response => {
@@ -86,10 +89,19 @@ const NavBar = () => {
                     {/* Show total cart value */}
                     <h4>Total: ${cart.getTotalCost().toFixed(2)}</h4> 
 
+                    {/* Cancel button */}
+                    <Button style={{ marginRight: '0.25rem' }}
+                        variant="danger" 
+                        // Pass boolean argument to checkout()
+                        onClick={() => checkout(true)} // true for cancel
+                    >
+                        Cancel
+                    </Button>
+
                     {/* "Purchase items!" button */}
-                    <Button 
+                    <Button
                         variant="success"
-                        onClick={checkout} // Call checkout
+                        onClick={() => checkout(false)} // Call checkout, false for purchase
                     > 
                         Purchase items!
                     </Button>
