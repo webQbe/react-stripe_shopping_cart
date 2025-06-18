@@ -15,6 +15,29 @@ const NavBar = () => {
     // Access full cart
     const cart = useContext(CartContext)
 
+    const checkout = async () => {
+        await fetch('http://localhost:4000/checkout', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ items: cart.items })
+        })
+        .then(res => res.json())
+        .then(response => {
+            if (response.url){
+                window.location.assign(response.url) // Forwarding user to Stripe in real mode
+                /* In mock mode, the server returns { url: "http://localhost:3000/success" } */
+            } else if (response.error) {
+                console.error("Checkout error:", response.error);
+                // show error to user
+            }
+        })
+        .catch(err => {
+            console.error("Network or server error:", err);
+        });
+    }
+
   return (
     <>
         <Navbar className="sm"> {/* Render responsive navigation bar */}
@@ -63,8 +86,13 @@ const NavBar = () => {
                     {/* Show total cart value */}
                     <h4>Total: ${cart.getTotalCost().toFixed(2)}</h4> 
 
-                    {/* Add "Purchase items!" button */}
-                    <Button variant="success">Purchase items!</Button>
+                    {/* "Purchase items!" button */}
+                    <Button 
+                        variant="success"
+                        onClick={checkout} // Call checkout
+                    > 
+                        Purchase items!
+                    </Button>
                 </>
 
                 ) : ( 
@@ -72,9 +100,7 @@ const NavBar = () => {
                  <h1>Your cart is empty</h1>
                  /* Purchase button & total cart value is hidden when cart is empty */    
             )}
-
-                
-
+         
             </Modal.Body>
         </Modal>
     </>

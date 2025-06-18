@@ -3,7 +3,6 @@ import { Button } from "react-bootstrap"
 import { CartContext } from "../CartContext"
 import { getProductData } from "../productsStore"
 
-
 const CartProduct = ({ product }) => { // Receive product as a prop
 
     const cart = useContext(CartContext)

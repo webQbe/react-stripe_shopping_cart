@@ -38,3 +38,31 @@
     3. Clear contents in `src/App.css`
 
 7. Start frontend server: `npm run dev`
+
+### 2. Set Up Express Backend
+1. Create `server/` directory
+2. Create `server/package.json` file
+    1. Open `server/` in VSCode terminal
+    2. Run `npm init -y`
+    3. Add start script:
+        ```
+        "scripts": {
+            ...
+            "start": "node server.js"
+        },
+        ```
+3. Install packages:
+    ```
+    npm i express cors dotenv stripe
+    ```
+4. Create `server/.env` file:
+    ```
+    # for mock
+    MOCK_PAYMENTS=true
+    STRIPE_SECRET_KEY=sk_test_dummy_key_123
+
+    # later, for real Stripe
+    MOCK_PAYMENTS=false
+    STRIPE_SECRET_KEY=sk_test_...
+    ```
+5. Run backend: `npm start`
