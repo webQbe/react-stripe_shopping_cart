@@ -1,4 +1,5 @@
 # React-Stripe Shopping Cart
+This repo is an adaptation of [Build a Shopping Cart With React JS & Stripe](https://www.youtube.com/watch?v=_8M-YVY76O8) by Brad Traversy. I followed the tutorial to learn followings:
 - Creating React & Stripe **Shopping Cart app**
 - **Adding** items to cart in different amounts
 - **Removing** items from the cart
@@ -9,6 +10,9 @@
 - Display Thank you message when the purchase is complete 
 - Using **React-Router**, **React-Bootstrap**, basic **Express** backend and **Stripe API**
 
+
+## What I changed
+- Mocked backend responses since Stripe is not available in my country
 
 ## Getting Started
 ### 1. Create React App 
@@ -66,3 +70,11 @@
     STRIPE_SECRET_KEY=sk_test_...
     ```
 5. Run backend: `npm start`
+
+
+## Credits
+Original tutorial: [Build a Shopping Cart With React JS & Stripe](https://www.youtube.com/watch?v=_8M-YVY76O8) — Brad Traversy.
+This repo includes my changes (noted above).
+
+## License
+MIT License
